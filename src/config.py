@@ -57,12 +57,3 @@ EXPERTS = {
     #     "description": "This is the master chatbot, it can answer any question."
     # },
 }
-
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state["messages"] = {name: [] for name in EXPERTS.keys()}
-
-if "sessionIds" not in st.session_state:
-    ids = random.sample(range(1, 100000), len(EXPERTS.keys()))
-    st.session_state["sessionIds"] = {name: str(_id) for _id, name in zip(ids, EXPERTS.keys())}
-
