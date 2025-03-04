@@ -1,49 +1,70 @@
-import streamlit as st
-import requests
-import random
-import os
 from dotenv import load_dotenv
+import random, os
+
 import streamlit as st
-from src import auth
+
+from src.config import IS_DEBUG, EXPERTS, HEADERS
+from src import auth, utils
 
 load_dotenv(override=True)
 
+
 # ---------------------------- AUTH CHECKS ----------------------------
-if os.getenv("DEBUG", "").lower() == "true":
+if IS_DEBUG:
+    # skip password check in debug mode
     print("Running in debug mode, skipping password check.")
     st.session_state["password_correct"] = True
-    st.session_state["user_email"] = os.getenv("DEFAULT_EMAIL")
-    pass # skip password check in debug mode
 
 elif not auth.check_password():
     print("Password incorrect, stopping the script.")
     st.stop()  # Do not continue if check_password is not True.
-    
-st.title("Winning Expert")
 
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+st.title("Yakkyofy Experts Interface")
 
-# Display chat messages from history on app rerun
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
 
-# React to user input
-if prompt := st.chat_input("What is up?"):
-    # Display user message in chat message container
-    st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# create a tab for each chatbot
+tabs = st.tabs(EXPERTS.keys())
 
-    sessionId = random.randint(1, 100000)
-    get_response = requests.get(st.secrets["webhook"], params={"text": prompt, "sessionId": str(sessionId)}, headers={"x-access-password": st.secrets["password_endpoint"]})
-    response = get_response.json()
-    st.session_state.messages.append({"role": "assistant", "content": response["output"]})
+for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
 
-    # response = f"Echo: {prompt}"
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        st.markdown(response["output"])
-    # Add assistant response to chat history
+    with tab:
+
+        # add the description of the chatbot
+        st.write(chatbot_data["description"])
+
+        # add a button to rest sessionId and chat history
+        if st.button("Reset chat history", key=f"reset_{chatbot_name}"):
+            utils.reset_chat(chatbot_name)
+
+        # Display chat messages from history on app rerun
+        for message in st.session_state["messages"][chatbot_name]:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        # React to user input
+        if prompt := st.chat_input("What is up?", key=f"chat_input_{chatbot_name}"):
+
+            # Display user message in chat message container
+            st.chat_message("user").markdown(prompt)
+
+            # Add user message to chat history
+            st.session_state["messages"][chatbot_name].append({"role": "user", "content": prompt})
+
+            # Call chatbot
+            response = utils.call_chatbot(
+                chatbot_data["webhook"],
+                params={"text": prompt, "sessionId": st.session_state["sessionIds"][chatbot_name]},
+                headers=HEADERS
+            )
+
+            if response is None:
+                response = "Sorry, an error occured. Please try again refreshing the app."
+            else:
+                print(f"Response from chatbot: {response} - sessionId: {st.session_state['sessionIds'][chatbot_name]}")
+
+            # Add assistant response to chat history
+            st.session_state["messages"][chatbot_name].append({"role": "assistant", "content": response})
+
+            # Display assistant response in chat message container
+            with st.chat_message("assistant"):
+                st.markdown(response)

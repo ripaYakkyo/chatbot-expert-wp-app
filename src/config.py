@@ -1,0 +1,68 @@
+import streamlit as st
+from dotenv import load_dotenv
+import os, random
+
+load_dotenv(override=True)
+
+IS_DEBUG = os.getenv("DEBUG", "").lower() == "true"
+
+HEADERS = {
+    "x-access-password": st.secrets["password_endpoint"]
+}
+
+EXPERTS = {
+    "Master": {
+        "webhook": st.secrets.get("MASTER_ENDPOINT"),
+        "description": """\
+            This is the master chatbot, it can answer any question and he's connected with all the other experts.
+        """
+    },
+    "Trends Expert": {
+        "webhook": st.secrets.get("TRENDS_ENDPOINT"),
+        "description": """\
+            This is the expert of Google Trends data.
+            It can tell you the latest high volume trends from our DataBase or query any keyword in Google Trends.
+        """
+    },
+    "Amazon Expert": {
+        "webhook": st.secrets.get("AMAZON_ENDPOINT"),
+        "description": """\
+            This is the expert of Amazoon.
+            It can find best sellers by category, scrape details of a single product or search for products by keyword.
+            It is also connected with the Trends Expert to query interesting topics.
+        """
+    },
+    "Shopify Expert": {
+        "webhook": st.secrets.get("SHOPIFY_ENDPOINT"),
+        "description": """\
+            This is the Shopify expert.
+            It can:
+            1) get newest shopify products
+            2) search shopify shops by their domain (via regex), 
+            3) get products of a shopify shop
+            4) get shop by category or country
+        It is also connected with the Trends Expert to query interesting topics.
+        """
+    },
+    "AliExpress Expert": {
+        "webhook": st.secrets.get("ALIEXPRESS_ENDPOINT"),
+        "description": """\
+            This is the AliExpress expert.
+            It can search among winning products using text (via embeddings), or by category.
+            It is also connected with the Trends Expert to query interesting topics.
+        """
+    }
+    # "1688 Expert": {
+    #     "webhook": st.secrets.get("1688_ENDPOINT"),
+    #     "description": "This is the master chatbot, it can answer any question."
+    # },
+}
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state["messages"] = {name: [] for name in EXPERTS.keys()}
+
+if "sessionIds" not in st.session_state:
+    ids = random.sample(range(1, 100000), len(EXPERTS.keys()))
+    st.session_state["sessionIds"] = {name: str(_id) for _id, name in zip(ids, EXPERTS.keys())}
+
