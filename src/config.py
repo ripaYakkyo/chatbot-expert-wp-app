@@ -51,7 +51,14 @@ EXPERTS = {
             It can search among winning products using text (via embeddings), or by category.
             It is also connected with the Trends Expert to query interesting topics.
         """
-    }
+    },
+    "GoogleTrend Expert": {
+        "webhook": st.secrets.get("GTREND_ENDPOINT"),
+        "description": """\
+            This is the GoogleTrend expert.
+            It can get the latest trends from GoogleTrend.
+        """
+    },
     # "1688 Expert": {
     #     "webhook": st.secrets.get("1688_ENDPOINT"),
     #     "description": "This is the master chatbot, it can answer any question."
