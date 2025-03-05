@@ -17,13 +17,6 @@ EXPERTS = {
             This is the master chatbot, it can answer any question and he's connected with all the other experts.
         """
     },
-    "Trends Expert": {
-        "webhook": st.secrets.get("TRENDS_ENDPOINT"),
-        "description": """\
-            This is the expert of Google Trends data.
-            It can tell you the latest high volume trends from our DataBase or query any keyword in Google Trends.
-        """
-    },
     "Amazon Expert": {
         "webhook": st.secrets.get("AMAZON_ENDPOINT"),
         "description": """\
