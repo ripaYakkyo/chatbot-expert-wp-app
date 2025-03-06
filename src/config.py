@@ -52,8 +52,13 @@ EXPERTS = {
             It can get the latest trends from GoogleTrend.
         """
     },
-    # "1688 Expert": {
-    #     "webhook": st.secrets.get("1688_ENDPOINT"),
-    #     "description": "This is the master chatbot, it can answer any question."
-    # },
+    "1688 Expert": {
+        "webhook": st.secrets.get("ENDPOINT_1688"),
+        "description": """\
+            This is the 1688 expert.
+            It can search for winning products from 1688 by category or by title;
+            it can also perform image-search (with an url provided) on the whole 1688 platform.
+            It is also connected with the Trends Expert to query interesting topics.
+        """
+    },
 }
