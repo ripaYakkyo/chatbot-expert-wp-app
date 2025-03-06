@@ -40,6 +40,10 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
         # add the description of the chatbot
         st.write(chatbot_data["description"])
 
+        # add the link to the workflow
+        st.markdown(f"**Url**: [n8n WorkFlow]({chatbot_data['workflow_url']})")
+
+
         # add a button to rest sessionId and chat history
         if st.button("Reset chat history", key=f"reset_{chatbot_name}"):
             utils.reset_chat(chatbot_name)

@@ -13,12 +13,14 @@ HEADERS = {
 EXPERTS = {
     "Master": {
         "webhook": st.secrets.get("MASTER_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_MASTER"),
         "description": """\
             This is the master chatbot, it can answer any question and he's connected with all the other experts.
         """
     },
     "Amazon Expert": {
         "webhook": st.secrets.get("AMAZON_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_AMAZON"),
         "description": """\
             This is the expert of Amazoon.
             It can find best sellers by category, scrape details of a single product or search for products by keyword.
@@ -27,6 +29,7 @@ EXPERTS = {
     },
     "Shopify Expert": {
         "webhook": st.secrets.get("SHOPIFY_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_SHOPIFY"),
         "description": """\
             This is the Shopify expert.
             It can:
@@ -39,21 +42,25 @@ EXPERTS = {
     },
     "AliExpress Expert": {
         "webhook": st.secrets.get("ALIEXPRESS_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_ALIEXPRESS"),
         "description": """\
             This is the AliExpress expert.
             It can search among winning products using text (via embeddings), or by category.
+            It can also search on the whole AliExpress via image search.
             It is also connected with the Trends Expert to query interesting topics.
         """
     },
-    "GoogleTrend Expert": {
+    "TRENDS Expert": {
         "webhook": st.secrets.get("GTREND_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_TRENDS"),
         "description": """\
-            This is the GoogleTrend expert.
-            It can get the latest trends from GoogleTrend.
+            This is the TRENDS expert.
+            It can get the latest trends from GoogleTrends.
         """
     },
     "1688 Expert": {
         "webhook": st.secrets.get("ENDPOINT_1688"),
+        "workflow_url": st.secrets.get("WORKFLOW_1688"),
         "description": """\
             This is the 1688 expert.
             It can search for winning products from 1688 by category or by title;
