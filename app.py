@@ -48,11 +48,6 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
         if st.button("Reset chat history", key=f"reset_{chatbot_name}"):
             utils.reset_chat(chatbot_name)
 
-        # Display chat messages from history on app rerun
-        for message in st.session_state["messages"][chatbot_name]:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-
         # React to user input
         if prompt := st.chat_input("What is up?", key=f"chat_input_{chatbot_name}"):
 
@@ -80,3 +75,8 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             # Display assistant response in chat message container
             with st.chat_message("assistant"):
                 st.markdown(response)
+
+        # Display chat messages from history on app rerun in reverse order
+        for message in reversed(st.session_state["messages"][chatbot_name]):
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
