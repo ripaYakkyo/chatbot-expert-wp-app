@@ -28,7 +28,7 @@ if "messages" not in st.session_state:
 if "sessionIds" not in st.session_state:
     ids = random.sample(range(1, 100000), len(EXPERTS.keys()))
     st.session_state["sessionIds"] = {name: str(_id) for _id, name in zip(ids, EXPERTS.keys())}
-
+    st.session_state["alltime_sessionIds"] = set(st.session_state["sessionIds"].values())
 
 # create a tab for each chatbot
 tabs = st.tabs(EXPERTS.keys())

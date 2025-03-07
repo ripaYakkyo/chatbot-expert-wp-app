@@ -1,6 +1,6 @@
 import streamlit as st
 from dotenv import load_dotenv
-import os, random
+import os
 
 load_dotenv(override=True)
 
@@ -47,6 +47,7 @@ EXPERTS = {
             This is the AliExpress expert.
             It can search among winning products using text (via embeddings), or by category.
             It can also search on the whole AliExpress via image search.
+            It can query product details providing the productId.
             It is also connected with the Trends Expert to query interesting topics.
         """
     },
