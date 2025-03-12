@@ -69,4 +69,12 @@ EXPERTS = {
             It is also connected with the Trends Expert to query interesting topics.
         """
     },
+    "Ads Expert": {
+        "webhook": st.secrets.get("ADS_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_ADS"),
+        "description": """\
+            This is the Ads expert.
+            It can get the latest ads from Meta (Facebook, Instagram etc..) and TikTok.
+        """
+    }
 }
