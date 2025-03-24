@@ -76,5 +76,13 @@ EXPERTS = {
             This is the Ads expert.
             It can get the latest ads from Meta (Facebook, Instagram etc..) and TikTok.
         """
+    },
+    "Shein Expert": {
+        "webhook": st.secrets.get("SHEIN_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_SHEIN"),
+        "description": """\
+            This is the Shein expert.
+            It can get the best sellers of shein and the top products by category
+        """
     }
 }
