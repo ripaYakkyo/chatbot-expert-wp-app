@@ -79,7 +79,7 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             st.sidebar.write("Intermediate steps:")
             for step in intermediate_steps:
                 st.sidebar.write(step.get("action").get("tool"))
-                st.sidebar.write("Input:" + str(step.get("action").get("toolInput")))
+                st.sidebar.write("Input: " + str(step.get("action").get("toolInput")))
             # Display assistant chatbot_message in chat message container
             tab.chat_message("assistant").markdown(chatbot_message)
 
