@@ -82,7 +82,15 @@ EXPERTS = {
         "workflow_url": st.secrets.get("WORKFLOW_SHEIN"),
         "description": """\
             This is the Shein expert.
-            It can get the best sellers of shein and the top products by category
+            It can get the best sellers from Shein website by category or general best sellers.
+        """
+    },
+    "TikTok Expert": {
+        "webhook": st.secrets.get("TIKTOK_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_TIKTOK"),
+        "description": """\
+            This is the TikTok expert.
+            It can get nice dropshipping products extracted from the videos of organic viral posts on TikTok.
         """
     }
 }
