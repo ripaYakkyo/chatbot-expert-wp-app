@@ -64,19 +64,21 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             st.session_state["messages"][chatbot_name].append({"role": "user", "content": user_input})
 
             # Call chatbot
-            response = utils.call_chatbot(
+            chatbot_message, intermediate_steps = utils.call_chatbot(
                 chatbot_data["webhook"],
                 params={"text": user_input, "sessionId": st.session_state["sessionIds"][chatbot_name]},
             )
 
-            if response is None:
-                response = "Sorry, an error occured. Please try again refreshing the app."
+            if chatbot_message is None:
+                chatbot_message = "Sorry, an error occured. Please try again refreshing the app."
             else:
-                print(f"Response from chatbot: {response} - sessionId: {st.session_state['sessionIds'][chatbot_name]}")
+                print(f"chatbot_message from chatbot: {chatbot_message} - sessionId: {st.session_state['sessionIds'][chatbot_name]}")
 
-            # Add assistant response to chat history
-            st.session_state["messages"][chatbot_name].append({"role": "assistant", "content": response})
-
-            # Display assistant response in chat message container
-            tab.chat_message("assistant").markdown(response)
+            # Add assistant chatbot_message to chat history
+            st.session_state["messages"][chatbot_name].append({"role": "assistant", "content": chatbot_message})
+            st.sidebar.write("Intermediate steps:")
+            for step in intermediate_steps:
+                st.sidebar.write(step.get("action").get("tool"))
+            # Display assistant chatbot_message in chat message container
+            tab.chat_message("assistant").markdown(chatbot_message)
 

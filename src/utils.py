@@ -18,12 +18,12 @@ def call_chatbot(url: str, params: Dict[str, Any]={}, body: Dict[str, Any]=None)
         if response.status_code != 200:
             print(f"Error calling {url}: {response.status_code} - {response.text[:100]}")
             return None
-
-        if "output" not in response.json():
-            print(f"Error calling {url}: {response.json()} - NO OUTPUT FOUND")
+        res = response.json()
+        if "output" not in res:
+            print(f"Error calling {url}: {res} - NO OUTPUT FOUND")
             return None
 
-        return response.json()["output"]
+        return res["output"], res.get("intermediateSteps")
 
     except Exception as e:
         print(f"Error calling {url}: {e}")
