@@ -11,6 +11,13 @@ HEADERS = {
 }
 
 EXPERTS = {
+    "Master Tool Think": {
+        "webhook": st.secrets.get("MASTER_ENDPOINT_v2"),
+        "workflow_url": st.secrets.get("WORKFLOW_MASTER_v2"),
+        "description": """\
+            This is the master chatbot, it can answer any question and he's connected with all the other experts.
+        """
+    },
     "Master": {
         "webhook": st.secrets.get("MASTER_ENDPOINT"),
         "workflow_url": st.secrets.get("WORKFLOW_MASTER"),
