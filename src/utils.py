@@ -23,7 +23,7 @@ def call_chatbot(url: str, params: Dict[str, Any]={}, body: Dict[str, Any]=None)
             print(f"Error calling {url}: {res} - NO OUTPUT FOUND")
             return None, None
 
-        return res["output"], res.get("intermediateSteps")
+        return res["output"], res.get("intermediateSteps", None)
 
     except Exception as e:
         print(f"Error calling {url}: {e}")
