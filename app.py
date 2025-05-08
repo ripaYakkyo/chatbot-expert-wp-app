@@ -76,11 +76,13 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
 
             # Add assistant chatbot_message to chat history
             st.session_state["messages"][chatbot_name].append({"role": "assistant", "content": chatbot_message})
+
+            # Display assistant chatbot_message in chat message container
+            tab.chat_message("assistant").markdown(chatbot_message)
+
             if isinstance(intermediate_steps, list):
                 st.sidebar.write("Intermediate steps:")
                 for step in intermediate_steps:
                     st.sidebar.write(step.get("action").get("tool"))
                     st.sidebar.write("Input: " + str(step.get("action").get("toolInput")))
-                # Display assistant chatbot_message in chat message container
-                tab.chat_message("assistant").markdown(chatbot_message)
 
