@@ -67,7 +67,7 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             chatbot_message, intermediate_steps = utils.call_chatbot(
                 chatbot_data["webhook"],
                 params={"text": user_input, "sessionId": st.session_state["sessionIds"][chatbot_name]},
-                body={"image": ""}
+                # body={"image": ""}
             )
 
             if chatbot_message is None:
