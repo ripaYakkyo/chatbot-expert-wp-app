@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import random
 import streamlit as st
+from time import time
 
 from src.config import IS_DEBUG, EXPERTS
 from src import auth, utils
@@ -28,9 +29,12 @@ if "messages" not in st.session_state:
     st.session_state["messages"] = {name: [] for name in EXPERTS.keys()}
 
 if "sessionIds" not in st.session_state:
-    ids = random.sample(range(1, 100000), len(EXPERTS.keys()))
-    st.session_state["sessionIds"] = {name: str(_id) for _id, name in zip(ids, EXPERTS.keys())}
-    st.session_state["alltime_sessionIds"] = set(st.session_state["sessionIds"].values())
+    # ids = random.sample(range(1, 100000), len(EXPERTS.keys()))
+    # st.session_state["sessionIds"] = {name: str(_id) for _id, name in zip(ids, EXPERTS.keys())}
+    # st.session_state["alltime_sessionIds"] = set(st.session_state["sessionIds"].values())
+
+    for i, name in enumerate(EXPERTS.keys()):
+        st.session_state["sessionIds"][name] = str(time()*1000) + str(i)
 
 
 # ---------------------------- CHATBOT INTERFACE ----------------------------
