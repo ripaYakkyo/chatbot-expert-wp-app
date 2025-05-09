@@ -34,7 +34,7 @@ if "sessionIds" not in st.session_state:
     # st.session_state["alltime_sessionIds"] = set(st.session_state["sessionIds"].values())
 
     for i, name in enumerate(EXPERTS.keys()):
-        st.session_state["sessionIds"][name] = str(time()*1000) + str(i)
+        st.session_state["sessionIds"][name] = str(time()*1000) + str(name)
 
 
 # ---------------------------- CHATBOT INTERFACE ----------------------------

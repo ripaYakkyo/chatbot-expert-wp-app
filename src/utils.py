@@ -35,13 +35,14 @@ def reset_chat(chatbot_name: str) -> None:
     del st.session_state["messages"][chatbot_name]
     st.session_state["messages"][chatbot_name] = []
 
-    existing_ids = set(list(st.session_state["sessionIds"].values())).difference(st.session_state["sessionIds"][chatbot_name])
-    invalid_ids = existing_ids.union(st.session_state["alltime_sessionIds"])
+    # existing_ids = set(list(st.session_state["sessionIds"].values())).difference(st.session_state["sessionIds"][chatbot_name])
+    
+    # invalid_ids = existing_ids.union(st.session_state["alltime_sessionIds"])
 
-    candidate_ids = list(set(range(1, 100000)).difference(invalid_ids))
+    # candidate_ids = list(set(range(1, 100000)).difference(invalid_ids))
 
-    st.session_state["sessionIds"][chatbot_name] = str(random.choice(candidate_ids))
-    st.session_state["alltime_sessionIds"].add(st.session_state["sessionIds"][chatbot_name])
+    st.session_state["sessionIds"][chatbot_name] = str(time()*1000)+ str(chatbot_name)
+    # st.session_state["alltime_sessionIds"].add(st.session_state["sessionIds"][chatbot_name])
 
     return None
 
