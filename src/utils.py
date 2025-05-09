@@ -1,5 +1,6 @@
 from typing import Dict, Any, Union
 from time import sleep
+from time import time
 import requests
 import random
 import streamlit as st
