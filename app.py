@@ -68,7 +68,10 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
         if tab.button("Reset chat history", key=f"reset_{chatbot_name}"):
             utils.reset_chat(chatbot_name)
             
-        # Add image uploader
+        # Create a container for the chat messages
+        chat_container = tab.container()
+            
+        # Add image uploader above the chat area
         uploaded_image = tab.file_uploader("Upload an image (optional)", 
                                           type=["png", "jpg", "jpeg"], 
                                           key=f"image_uploader_{chatbot_name}")
@@ -86,13 +89,16 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
                 st.rerun()
 
         # Display chat messages from history on app rerun
-        for message in st.session_state["messages"][chatbot_name]:
-            tab.chat_message(message["role"]).markdown(message["content"])
+        with chat_container:
+            for message in st.session_state["messages"][chatbot_name]:
+                st.chat_message(message["role"]).markdown(message["content"])
 
+        # Place the chat input at the bottom of the page
         if user_input := tab.chat_input("What is up?", key=f"chat_input_{chatbot_name}"):
 
             # Display user message in chat message container
-            tab.chat_message("user").markdown(user_input)
+            with chat_container:
+                st.chat_message("user").markdown(user_input)
 
             # Add user message to chat history
             st.session_state["messages"][chatbot_name].append({"role": "user", "content": user_input})
@@ -121,7 +127,8 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             st.session_state["messages"][chatbot_name].append({"role": "assistant", "content": chatbot_message})
 
             # Display assistant chatbot_message in chat message container
-            tab.chat_message("assistant").markdown(chatbot_message)
+            with chat_container:
+                st.chat_message("assistant").markdown(chatbot_message)
 
             if isinstance(intermediate_steps, list):
                 st.sidebar.write("Intermediate steps:")
