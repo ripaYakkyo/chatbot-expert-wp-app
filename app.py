@@ -1,6 +1,8 @@
 from dotenv import load_dotenv
 import random
 import streamlit as st
+import base64
+import io
 from time import time
 
 from src.config import IS_DEBUG, EXPERTS
@@ -20,6 +22,18 @@ elif not auth.check_password():
     st.stop()  # Do not continue if check_password is not True.
 
 
+# Function to convert uploaded image to base64
+def get_image_base64(uploaded_file):
+    if uploaded_file is not None:
+        # Read file as bytes
+        bytes_data = uploaded_file.getvalue()
+        
+        # Encode to base64
+        base64_encoded = base64.b64encode(bytes_data).decode("utf-8")
+        return base64_encoded
+    return None
+
+
 # ---------------------------- APP INTERFACE ----------------------------
 
 st.title("Yakkyofy Experts Interface")
@@ -30,6 +44,10 @@ if "messages" not in st.session_state:
 
 if "sessionIds" not in st.session_state:
     st.session_state["sessionIds"] = {name: str(time()*1000) + str(name) for name in EXPERTS.keys()}
+
+# Initialize image state
+if "images" not in st.session_state:
+    st.session_state["images"] = {name: None for name in EXPERTS.keys()}
 
 
 # ---------------------------- CHATBOT INTERFACE ----------------------------
@@ -49,6 +67,23 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
         # add a button to rest sessionId and chat history
         if tab.button("Reset chat history", key=f"reset_{chatbot_name}"):
             utils.reset_chat(chatbot_name)
+            
+        # Add image uploader
+        uploaded_image = tab.file_uploader("Upload an image (optional)", 
+                                          type=["png", "jpg", "jpeg"], 
+                                          key=f"image_uploader_{chatbot_name}")
+        
+        # Display the uploaded image if available
+        if uploaded_image is not None:
+            tab.image(uploaded_image, caption="Uploaded Image", use_column_width=True)
+            # Store the base64 encoded image in session state
+            st.session_state["images"][chatbot_name] = get_image_base64(uploaded_image)
+        
+        # Button to clear the uploaded image
+        if st.session_state["images"][chatbot_name] is not None:
+            if tab.button("Clear image", key=f"clear_image_{chatbot_name}"):
+                st.session_state["images"][chatbot_name] = None
+                st.rerun()
 
         # Display chat messages from history on app rerun
         for message in st.session_state["messages"][chatbot_name]:
@@ -61,16 +96,24 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
 
             # Add user message to chat history
             st.session_state["messages"][chatbot_name].append({"role": "user", "content": user_input})
+            
+            # Prepare request params and body
+            params = {"text": user_input, "sessionId": st.session_state["sessionIds"][chatbot_name]}
+            body = {}
+            
+            # Add image to body if available
+            if st.session_state["images"][chatbot_name] is not None:
+                body["image"] = st.session_state["images"][chatbot_name]
 
             # Call chatbot
             chatbot_message, intermediate_steps = utils.call_chatbot(
                 chatbot_data["webhook"],
-                params={"text": user_input, "sessionId": st.session_state["sessionIds"][chatbot_name]},
-                # body={"image": ""}
+                params=params,
+                body=body if body else None
             )
 
             if chatbot_message is None:
-                chatbot_message = "Sorry, an error occured. Please try again refreshing the app."
+                chatbot_message = "Sorry, an error occurred. Please try again refreshing the app."
             else:
                 print(f"chatbot_message from chatbot: {chatbot_message} - sessionId: {st.session_state['sessionIds'][chatbot_name]}")
 
@@ -85,4 +128,3 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
                 for step in intermediate_steps:
                     st.sidebar.write(step.get("action").get("tool"))
                     st.sidebar.write("Input: " + str(step.get("action").get("toolInput")))
-
