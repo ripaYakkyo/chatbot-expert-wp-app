@@ -25,6 +25,14 @@ EXPERTS = {
             This is the master chatbot, it can answer any question and he's connected with all the other experts.
         """
     },
+    "Meta Ads/Campains": {
+        "webhook": st.secrets.get("META_ENDPOINT"),
+        "workflow_url": st.secrets.get("WORKFLOW_META"),
+        "description": """\
+            This is the Meta Ads expert.
+            It can analyze your Meta Ads campaigns and suggest improvements.
+        """
+    },
     "Amazon Expert": {
         "webhook": st.secrets.get("AMAZON_ENDPOINT"),
         "workflow_url": st.secrets.get("WORKFLOW_AMAZON"),
@@ -98,14 +106,6 @@ EXPERTS = {
         "description": """\
             This is the TikTok expert.
             It can get nice dropshipping products extracted from the videos of organic viral posts on TikTok.
-        """
-    },
-    "Meta Ads/Campains": {
-        "webhook": st.secrets.get("META_ENDPOINT"),
-        "workflow_url": st.secrets.get("WORKFLOW_META"),
-        "description": """\
-            This is the Meta Ads expert.
-            It can analyze your Meta Ads campaigns and suggest improvements.
         """
     }
 }
