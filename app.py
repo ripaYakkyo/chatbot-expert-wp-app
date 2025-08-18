@@ -117,6 +117,7 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
                 params=params,
                 body=body if body else None
             )
+            st.chat_message("assistant").markdown("calling chatbot...")
 
             if chatbot_message is None:
                 chatbot_message = "Sorry, an error occurred. Please try again refreshing the app."
