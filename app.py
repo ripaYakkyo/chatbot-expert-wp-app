@@ -4,13 +4,20 @@ import streamlit as st
 import base64
 import io
 from time import time
-
+import json
 from src.config import IS_DEBUG, EXPERTS
 from src import auth, utils
+import streamlit.components.v1 as components
 
 load_dotenv(override=True)
 
-
+def log_to_console(message: str) -> None:
+    js_code = f"""
+<script>
+    console.log({json.dumps(message)});
+</script>
+"""
+    components.html(js_code)
 # ---------------------------- AUTH CHECKS ----------------------------
 if IS_DEBUG:
     # skip password check in debug mode
@@ -117,6 +124,7 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
                 params=params,
                 body=body if body else None
             )
+            log_to_console(f"Calling {chatbot_name} with params: {params} and body: {body}, url: {chatbot_data['webhook']}")
             if chatbot_message is None:
                 chatbot_message = "Sorry, an error occurred. Please try again refreshing the app."
             else:
