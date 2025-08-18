@@ -95,7 +95,7 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
 
         # Place the chat input at the bottom of the page
         if user_input := tab.chat_input("What is up?", key=f"chat_input_{chatbot_name}"):
-
+            print(f"User input for {chatbot_name}: {user_input}")
             # Display user message in chat message container
             with chat_container:
                 st.chat_message("user").markdown(user_input)
