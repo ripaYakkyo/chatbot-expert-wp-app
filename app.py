@@ -7,6 +7,7 @@ from time import time
 import json
 from src.config import IS_DEBUG, EXPERTS
 from src import auth, utils
+from src.utils import BodyChat
 import streamlit.components.v1 as components
 
 load_dotenv(override=True)
@@ -110,21 +111,22 @@ for (chatbot_name, chatbot_data), tab in zip(EXPERTS.items(), tabs):
             # Add user message to chat history
             st.session_state["messages"][chatbot_name].append({"role": "user", "content": user_input})
             
-            # Prepare request params and body
-            params = {"text": user_input, "sessionId": st.session_state["sessionIds"][chatbot_name]}
-            body = {}
-            
-            # Add image to body if available
-            if st.session_state["images"][chatbot_name] is not None:
-                body["image"] = st.session_state["images"][chatbot_name]
+            # Prepare BodyChat object
+            body_chat = BodyChat(
+                sessionId=st.session_state["sessionIds"][chatbot_name],
+                user_query=user_input,
+                image=st.session_state["images"][chatbot_name],
+                is_test_chat=False,
+                add_tools_to_chat=True,
+                model="ft:gpt-4.1-mini-2025-04-14:yakkyo-spa:tools-and-knowledge:Bx7yOspD"
+            )
 
             # Call chatbot
             chatbot_message, intermediate_steps = utils.call_chatbot(
                 chatbot_data["webhook"],
-                params=params,
-                body=body if body else None
+                body_chat
             )
-            log_to_console(f"Calling {chatbot_name} with params: {params} and body: {body}, url: {chatbot_data['webhook']}")
+            log_to_console(f"Calling {chatbot_name} with body: {body_chat.model_dump()}, url: {chatbot_data['webhook']}")
             if chatbot_message is None:
                 chatbot_message = "Sorry, an error occurred. Please try again refreshing the app."
             else:

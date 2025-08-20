@@ -7,7 +7,8 @@ load_dotenv(override=True)
 IS_DEBUG = os.getenv("DEBUG", "").lower() == "true"
 
 HEADERS = {
-    "x-access-password": st.secrets["password_endpoint"]
+    "x-access-password": st.secrets["password_endpoint"],
+    "authorization": st.secrets["password_endpoint"],
 }
 
 EXPERTS = {

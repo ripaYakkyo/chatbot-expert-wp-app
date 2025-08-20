@@ -1,20 +1,30 @@
-from typing import Dict, Any, Union
+from typing import Dict, Any, Union, Optional
 from time import sleep
 from time import time
 import requests
 import random
 import streamlit as st
+from pydantic import BaseModel
 
 from src.config import HEADERS
 
 
-def call_chatbot(url: str, params: Dict[str, Any]={}, body: Dict[str, Any]=None) -> Union[str, None]:
+class BodyChat(BaseModel):
+    sessionId: str
+    user_query: str
+    image: Optional[Union[str, None]] = None
+    is_test_chat: Optional[Union[bool, None]] = False
+    add_tools_to_chat: Optional[Union[bool, None]] = True
+    model: Optional[Union[str, None]] = "ft:gpt-4.1-mini-2025-04-14:yakkyo-spa:tools-and-knowledge:Bx7yOspD"
+
+
+def call_chatbot(url: str, body_chat: BodyChat) -> Union[str, None]:
     # sleep(1.5)
     # return "test response"
 
-    print(f"Calling {url} with params: {params} and body: {body}")
+    print(f"Calling {url} with body: {body_chat.model_dump()}")
     try:
-        response = requests.get(url, params=params, json=body, headers=HEADERS)
+        response = requests.post(url, json=body_chat.model_dump(), headers=HEADERS)
 
         if response.status_code != 200:
             print(f"Error calling {url}: {response.status_code} - {response.text[:100]}")
